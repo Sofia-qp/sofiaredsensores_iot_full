@@ -18,6 +18,7 @@ public class GestorDeRed {
 
     // 2. Navegador de Alertas: Permite moverse adelante y atrás entre alertas
     private Deque<String> navegadorAlertas;
+    private Deque<String> alertasAnteriores;
     private String alertaActual;
 
     // 3. Ciclo de Monitoreo: Gestión de la rotación de sensores a consultar
@@ -34,6 +35,7 @@ public class GestorDeRed {
         // (ArrayList, ArrayDeque, HashMap, etc.)
         this.historialEventos = new ArrayList<>();
         this.navegadorAlertas = new ArrayDeque<>();
+        this.alertasAnteriores = new ArrayDeque<>();
         this.colaMonitoreo = new ArrayDeque<>();
         this.topologiaRed = new HashMap<>();
         this.bufferIngesta = new ArrayDeque<>();
@@ -64,25 +66,32 @@ public class GestorDeRed {
     // =========================================================================
 
     public void registrarAlerta(String alerta) {
-        navegadorAlertas.addLast(alerta);
-        alertaActual = alerta;
+        // La primera alerta queda como actual; las demas esperan "adelante" del cursor.
+        if (alertaActual == null) {
+            alertaActual = alerta;
+        } else {
+            navegadorAlertas.addLast(alerta);
+        }
     }
-
     public String navegarAlSiguiente() {
         // TODO 2: Implementar la lógica de desplazamiento hacia adelante.
         // Debe devolver la siguiente alerta o null si no hay más.
         // Recuerda actualizar el estado de 'alertaActual'.
-        return null;
+        if (navegadorAlertas.isEmpty()) return null;
+        alertasAnteriores.addFirst(alertaActual);
+        alertaActual = navegadorAlertas.pollFirst();
+        return alertaActual;
     }
 
     public String navegarAlAnterior() {
         // TODO 3: Implementar la lógica de desplazamiento hacia atrás.
         // Debe devolver la alerta anterior o null si es la primera.
         // Recuerda actualizar el estado de 'alertaActual'.
-        return null;
+        if (alertasAnteriores.isEmpty()) return null;
+        navegadorAlertas.addFirst(alertaActual);
+        alertaActual = alertasAnteriores.pollFirst();
+        return alertaActual;
     }
-
-    public String getAlertaActual() { return alertaActual; }
 
     // =========================================================================
     // SECCIÓN 3: CICLO DE MONITOREO
