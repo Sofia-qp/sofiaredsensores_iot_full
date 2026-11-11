@@ -49,6 +49,7 @@ public class GestorDeRed {
         // TODO 1: Implementar la adición del evento al historial.
         // Debe registrarse la fecha/hora actual junto con la descripción del evento.
         // Ejemplo: "[2026-10-24 10:00] Sensor EST-01 activado"
+        historialEventos.add("[" + new java.util.Date() + "] " + evento);
     }
 
     public List<String> obtenerEventosRecientes(int limite) {
@@ -59,6 +60,10 @@ public class GestorDeRed {
     public void limpiarHistorialAntiguo(int mantener) {
         // TODO 10: Implementar la optimización del historial.
         // Eliminar los registros más antiguos para mantener solo los últimos 'mantener' eventos.
+        int sobran = historialEventos.size() - Math.max(0, mantener);
+        if (sobran > 0) {
+            historialEventos.subList(0, sobran).clear();
+        }
     }
 
     // =========================================================================
