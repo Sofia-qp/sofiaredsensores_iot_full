@@ -118,10 +118,6 @@ public class GestorDeRed {
     // SECCIÓN 4: TOPOLOGÍA DE RED
     // =========================================================================
     public void registrarConexion(String sensorA, String sensorB) {
-        /** Registra un sensor en la red sin conexiones (queda aislado hasta que se conecte). */
-        public void registrarSensor(String idSensor) {
-            if (idSensor != null) topologiaRed.putIfAbsent(idSensor, new ArrayList<>());
-        }
         // TODO 6: Implementar la conexión bidireccional entre dos sensores.
         // Debe agregar sensorB a la lista de vecinos de sensorA, y viceversa.
         // Asegurar que no se creen conexiones duplicadas.
@@ -130,6 +126,25 @@ public class GestorDeRed {
         List<String> vecinosB = topologiaRed.computeIfAbsent(sensorB, k -> new ArrayList<>());
         if (!vecinosA.contains(sensorB)) vecinosA.add(sensorB);
         if (!vecinosB.contains(sensorA)) vecinosB.add(sensorA);
+    }
+    // =========================================================================
+// SECCIÓN 4: TOPOLOGÍA DE RED
+// =========================================================================
+
+    public void registrarConexion(String sensorA, String sensorB) {
+        // TODO 6: Implementar la conexión bidireccional entre dos sensores.
+        // Debe agregar sensorB a la lista de vecinos de sensorA, y viceversa.
+        // Asegurar que no se creen conexiones duplicadas.
+        if (sensorA == null || sensorB == null || sensorA.equals(sensorB)) return;
+        List<String> vecinosA = topologiaRed.computeIfAbsent(sensorA, k -> new ArrayList<>());
+        List<String> vecinosB = topologiaRed.computeIfAbsent(sensorB, k -> new ArrayList<>());
+        if (!vecinosA.contains(sensorB)) vecinosA.add(sensorB);
+        if (!vecinosB.contains(sensorA)) vecinosB.add(sensorA);
+    }
+
+    /** Registra un sensor en la red sin conexiones (queda aislado hasta que se conecte). */
+    public void registrarSensor(String idSensor) {
+        if (idSensor != null) topologiaRed.putIfAbsent(idSensor, new ArrayList<>());
     }
 
     public List<String> obtenerVecinos(String idSensor) {
